@@ -59,6 +59,16 @@ h1 {
     -webkit-box-shadow: 20px 10px 33px -10px rgba(0,0,0,0.75);
     -moz-box-shadow: 20px 10px 33px -10px rgba(0,0,0,0.75);
     box-shadow: 20px 10px 33px -10px rgba(0,0,0,0.75);
+/* From https://css.glass */
+background: rgba(255, 255, 255, 0.83);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.3);
+
+
+
 }
 
 .card-icon {
@@ -108,6 +118,12 @@ h1 {
   }
 
   .change-text{
-    font-size:1rem;
+    font-size:0.75rem;
     color:red;
+    
+  }
+
+  .confirm-text{
+    font-size:0.75rem;
+    color:green;
   }

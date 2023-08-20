@@ -33,8 +33,7 @@ class ContactService
     static getContact(id)
     {
         return $.get(`${this.url}/${id}`)//endpoint of the specific contact
-        //console.log(`${this.url}/1`)
-        //return $.get(`${this.url}/1`)
+
     }
 
     static createContact(contact)
@@ -42,15 +41,26 @@ class ContactService
         return $.post(this.url, contact);
     }
 
-    static updateContact(contact)
+    
+    static updateContact(id)
     {
-        return $.ajax({
-            url: `${this.url}/${contact_id}`,
-            dataType: 'json',
-            data: JSON.stringify(contact),
-            contentType: 'application/json',
-            type: 'PUT'
-        });
+
+       $.ajax(`${this.url}/${id}`, {
+        method: 'PUT',
+        data: {
+            name: $(`#name-text-${id}`).text(),
+            email:$(`#email-text-${id}`).text(), 
+            phone:$(`#phone-text-${id}`).text(), 
+            location:$(`#location-text-${id}`).text(), 
+            birthday: $(`#birthday-text-${id}`).text()
+        }
+       });
+
+       let actionMessage = $(`#action-message-${id}`);
+       actionMessage.toggleClass("change-text", false);
+       actionMessage.text('Contact has been edited!');
+
+       DomManager.getAllContacts();
     }
 
     static deleteContact(id)
@@ -94,70 +104,85 @@ class DomManager {
         ContactService.createContact(contactToCreate)
 
     }
+    // helper functions for changing the fields in the contact cards when editing
 
-    //helper function referenced in update contact
-     static updateName = (element, updateValue) => 
-     {
-        //console.log("checkbox clicked!")
-        let toChange = $(`#${element}`);
-        toChange.replaceWith(`<h5 class="card-title mt-3 mb-3" id= "name-12">${updateValue}</h5>`);
-    }
+        static updateCardMessage = (id) =>
+        {
+            let actionMessage = $(`#action-message-${id}`);
+            actionMessage.toggleClass("change-text", false);
+            actionMessage.addClass('confirm-text');
+            actionMessage.text('Please click submit when you are finished editing');
+        }
 
-    //helper function referenced in update contact
-    static updateLocation = (element, updateValue) =>
-    {
-        let toChange = $(`#${element}`);
-        toChange.replaceWith(`<p class="text-center" id = "location-12">${updateValue}</p>`);
-    }
+        //helper function referenced in update contact
+        static updateName = (element, id, updateValue) => 
+        {
+            //console.log("checkbox clicked!")
+            let toChange = $(`#${element}`);
+            toChange.replaceWith(`<h5 class="card-title mt-3 mb-3" id= "name-text-${id}">${updateValue}</h5>`);
+            DomManager.updateCardMessage(`${id}`);
+        }
 
-    static updateEmail = (element, updateValue) =>
-    {
-        let toChange = $(`#${element}`);
-        toChange.replaceWith
-        (`<div class ="mb-3" id="email-container-12">
-        <i class=" card-icon fa fa-envelope fa-lg mr-3"></i>
-        <p class ="card-text" id = "${element}-12">${updateValue}</p>`);
-    }
+        //helper function referenced in update contact
+        static updateLocation = (element, id, updateValue) =>
+        {
+            let toChange = $(`#${element}`);
+            toChange.replaceWith(`<p class="text-center" id = "location-text-${id}">${updateValue}</p>`);
+        }
 
-    static updatePhone = (element, updateValue) =>
-    {
-        let toChange = $(`#${element}`);
-        toChange.replaceWith
-        (`<div class ="mb-3" id="phone-container-12">
-        <i class=" card-icon fa fa-phone fa-lg mr-3"></i>
-        <p class ="card-text" id = "${element}-12">${updateValue}</p>`);
-    }
+        static updateEmail = (element, id, updateValue) =>
+        {
+            let toChange = $(`#${element}`);
+            toChange.replaceWith
+            (`<div class ="mb-3" id="email-container-${id}">
+            <i class=" card-icon fa fa-envelope fa-lg mr-3"></i>
+            <p class ="card-text" id= "email-text-${id}">${updateValue}</p>`);
+        }
 
-    static updateBirthday = (element, updateValue) =>
-    {
-        let toChange = $(`#${element}`);
-        toChange.replaceWith
-        (`<div class ="mb-3" id="birthday-container-12">
-        <i class=" card-icon fa fa-birthday-cake fa-lg"></i>
-        <p class ="card-text" id = "${element}-12">${updateValue}</p>`);
-    }
+        static updatePhone = (element, id, updateValue) =>
+        {
+            let toChange = $(`#${element}`);
+            toChange.replaceWith
+            (`<div class ="mb-3" id="phone-container-${id}">
+            <i class=" card-icon fa fa-phone fa-lg mr-3"></i>
+            <p class ="card-text" id = "phone-text-${id}">${updateValue}</p>`);
+        }
+
+        static updateBirthday = (element, id, updateValue) =>
+        {
+            let toChange = $(`#${element}`);
+            toChange.replaceWith
+            (`<div class ="mb-3" id="birthday-container-${id}">
+            <i class=" card-icon fa fa-birthday-cake fa-lg"></i>
+            <p class ="card-text" id = "birthday-text-${id}">${updateValue}</p>`);
+
+
+        }
+
+
 
     static updateContact(id)
     {
-        let currentCard = $(`#card-${id}`);
-        currentCard.prepend(`<p class ="change-text">Please click on the field you wish to change to update information</p>`);
+        let actionMessage = $(`#action-message-${id}`);
+        actionMessage.addClass('change-text')
+        actionMessage.text('Please click on the field you wish to update');
 
-        let name = $(`#name-${id}`);
-        let location = $(`#location-${id}`);
+        let name = $(`#name-text-${id}`);
+        let location = $(`#location-text-${id}`);
         let email = $(`#email-container-${id}`);
         let phone = $(`#phone-container-${id}`);
         let birthday = $(`#birthday-container-${id}`);
         let updateButton = $(`#update-button-${id}`);
 
         updateButton.replaceWith
-        (`<button type="button" class="btn btn-success" id ="submit-update-button">Submit</button>`)
+        (`<button type="button" class="btn btn-success contact-button" id ="submit-update-button" onclick = "ContactService.updateContact(${id})">Submit</button>`)
         
         name.on( "click", ()=> 
         {
             name.replaceWith
             (`
                 <div class = "form-floating mb-3" id ="name-${id}">
-                <i class=" icon fa fa-check fa-lg" id = "name-confirm" onclick = "DomManager.updateName('name-${id}', $('#nameInput').val())"></i>
+                <i class=" icon fa fa-check fa-lg" id = "name-confirm" onclick = "DomManager.updateName('name-${id}', ${id}, $('#nameInput').val())"></i>
                 <input type = "text" class = "form-control form-control-sm mb-1" id = "nameInput" placeholder = "Please ender updated name">
                 <label for = "changeName">New Name</label>
                 </div>
@@ -171,7 +196,7 @@ class DomManager {
             location.replaceWith
             (`
                 <div class = "form-floating mb-3" id ="location-${id}">
-                <i class=" icon fa fa-check fa-lg" id = "location-confirm" onclick = "DomManager.updateLocation('location-${id}', $('#locationInput').val())"></i>
+                <i class=" icon fa fa-check fa-lg" id = "location-confirm" onclick = "DomManager.updateLocation('location-${id}', ${id}, $('#locationInput').val())"></i>
                 <input type = "text" class = "form-control form-control-sm mb-1" id = "locationInput" placeholder = "Please enter updated location">
                 <label for = "locationInput">New Location</label>
                 </div>
@@ -184,7 +209,7 @@ class DomManager {
             email.replaceWith
             (`
                 <div class = "form-floating mb-3" id ="email-${id}">
-                <i class=" icon fa fa-check fa-lg" id = "email-confirm" onclick = "DomManager.updateEmail('email-${id}', $('#emailInput').val())"></i>
+                <i class=" icon fa fa-check fa-lg" id = "email-confirm" onclick = "DomManager.updateEmail('email-${id}', ${id}, $('#emailInput').val())"></i>
                 <input type = "text" class = "form-control form-control-sm mb-1" id = "emailInput" placeholder = "Please enter updated email">
                 <label for = "emailInput">New Email</label>
                 </div>
@@ -197,7 +222,7 @@ class DomManager {
             phone.replaceWith
             (`
                 <div class = "form-floating mb-3" id ="phone-${id}">
-                <i class=" icon fa fa-check fa-lg" id = "phone-confirm" onclick = "DomManager.updatePhone('phone-${id}', $('#phoneInput').val())"></i>
+                <i class=" icon fa fa-check fa-lg" id = "phone-confirm" onclick = "DomManager.updatePhone('phone-${id}', ${id}, $('#phoneInput').val())"></i>
                 <input type = "text" class = "form-control form-control-sm mb-1" id = "phoneInput" placeholder = "Please enter updated phone">
                 <label for = "phoneInput">New Phone</label>
                 </div>
@@ -210,7 +235,7 @@ class DomManager {
             birthday.replaceWith
             (`
                 <div class = "form-floating mb-3" id ="birthday-${id}">
-                <i class=" icon fa fa-check fa-lg" id = "birthday-confirm" onclick = "DomManager.updateBirthday('birthday-${id}', $('#birthdayInput').val())"></i>
+                <i class=" icon fa fa-check fa-lg" id = "birthday-confirm" onclick = "DomManager.updateBirthday('birthday-${id}', ${id}, $('#birthdayInput').val())"></i>
                 <input placeholder="Birthday" type="text" onfocus="(this.type = 'date')"  id="birthdayInput" class = "form-control">
                 <label for = "birthdayInput">New Birthday</label>
                 </div>
@@ -222,28 +247,27 @@ class DomManager {
     static render(contacts) {
         this.contacts= contacts;
         $('#app').empty();
-
-        let counter = 0;
         for (let contact of contacts)
         {
             $('#app').prepend(
             `<div class = "col-sm-3">
                 <div class="card text-center mt-5">
                     <div class="card-body contact-card" id ="card-${contact.id}">
-                      <h5 class="card-title mt-3 mb-3" id= "name-${contact.id}" =>${contact.name}</h5>
-                      <p class="text-center" id= "location-${contact.id}">${contact.location}</p>
+                    <p class = "text-center" id="action-message-${contact.id}"><p>
+                      <h5 class="card-title mt-3 mb-3" id="name-text-${contact.id}">${contact.name}</h5>
+                      <p class="text-center" id= "location-text-${contact.id}">${contact.location}</p>
                       <i class="fa fa-user-circle large-icon mb-3 text-center"></i>
                       <div class ="mb-3" id="email-container-${contact.id}">
                         <i class=" card-icon fa fa-envelope fa-lg mr-3"></i>
-                        <p class =" card-text">${contact.email}</p>
+                        <p class = "card-text" id= "email-text-${contact.id}">${contact.email}</p>
                       </div>
                       <div class ="mb-3" id = "phone-container-${contact.id}">
                         <i class=" card-icon fa fa-phone fa-lg"></i>
-                        <p class ="card-text">${contact.phone}</p>
+                        <p class ="card-text" id= "phone-text-${contact.id}">${contact.phone}</p>
                       </div>
                       <div class ="mb-3" id = "birthday-container-${contact.id}">
                         <i class=" card-icon fa fa-birthday-cake fa-lg"></i>
-                        <p class ="card-text">${contact.birthday}</p>
+                        <p class ="card-text" id="birthday-text-${contact.id}">${contact.birthday}</p>
                       </div>
                       <div class="col-md-12 text-center">
                         <button type="button" class="btn btn-primary mt-3 mb-3 p-2 contact-button" id="update-button-${contact.id}" onclick = "DomManager.updateContact('${contact.id}')">Update</button>
@@ -252,7 +276,6 @@ class DomManager {
                     </div>
                 </div>
             </div>`)
-            counter ++
         }
     }
 }
