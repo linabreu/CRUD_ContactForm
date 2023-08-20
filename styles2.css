@@ -1,0 +1,113 @@
+body {
+    background-image: url("images/gradient2.jpg");
+    background-size: cover;
+
+
+}
+
+#contact-form {
+    margin-top:50px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.51);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    -webkit-box-shadow: 20px 10px 33px -10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 20px 10px 33px -10px rgba(0,0,0,0.75);
+    box-shadow: 20px 10px 33px -10px rgba(0,0,0,0.75);
+
+    
+}
+
+h1 {
+    -webkit-background-clip: text;
+	background-clip: text;
+	background-image: url("images/lava.jpg");
+	color: transparent;
+    font-weight:bold;
+}
+
+
+.form-floating {
+    position:relative;
+    width:90%;
+    margin:auto;
+}
+
+.icon {
+    position:absolute;
+    top: calc(30%);
+    left: 1.25rem;
+    color: #00064C;
+}
+
+.form-floating label, .form-floating .form-control{
+    left: .5rem;
+    padding-left: 3.5rem;
+}
+
+.large-icon {
+    font-size:50px;
+    color:#00064C;
+}
+
+.card {
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    -webkit-box-shadow: 20px 10px 33px -10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 20px 10px 33px -10px rgba(0,0,0,0.75);
+    box-shadow: 20px 10px 33px -10px rgba(0,0,0,0.75);
+}
+
+.card-icon {
+    float: left;
+    margin-left: 2rem;
+    margin-right:2rem;
+    color:#00064C;
+}
+
+.card-text {
+    text-align: left;
+}
+
+.contact-button {
+    margin-right:20px;
+}
+
+.createButton, .seeAllButton {
+
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    border-radius:8px;
+  }
+
+  .createButton{
+    background-color: #E43087;
+  }
+
+  .createButton:hover{
+    background-color:   #A92570;
+  }
+
+
+
+  .seeAllButton {
+    background-color: #062580;
+  }
+
+  .seeAllButton:hover {
+    background-color:   #031141;
+  }
+
+  .change-text{
+    font-size:1rem;
+    color:red;
+  }
