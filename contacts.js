@@ -7,7 +7,6 @@
     *location
 */
 
-
 const isNotBlank = (element) => { //can use this same one for name, location and birthday, just want it to not be blank
 
     let userInput = $(`#${element}`);
@@ -64,7 +63,7 @@ const validateInput = () =>
     isValidPhoneNumber();
     if( isNotBlank('name') == false || isNotBlank('location') == false || isNotBlank('birthday') == false ||  isValidPhoneNumber() == false || isValidEmail() == false)
     {
-       console.log('invalid inputs')
+       return
     }
     else //if everything is valid - create the contact
     {
@@ -130,9 +129,10 @@ class ContactService
 
        let actionMessage = $(`#action-message-${id}`);
        actionMessage.toggleClass("change-text", false);
+       actionMessage.toggleClass("confirm-text", true);
        actionMessage.text('Contact has been edited!');
 
-       DomManager.getAllContacts();
+       DomManager.getAllContacts();//once its updated reload everything
     }
 
     static deleteContact(id)
@@ -170,9 +170,12 @@ class DomManager {
         let email = $('#email').val();
         let phone = $('#phone').val();
         let location = $('#location').val();
-        let birthday = $('#birthday').val();
 
-        let contactToCreate = new Contact(name,email,phone,location, birthday);
+        let birthday = $('#birthday').val()
+        let birthdayDate = new Date(birthday);
+        let formattedBirthday = birthdayDate.toLocaleDateString('en-us', {year:"numeric", month:"long", day: "numeric"});
+        
+        let contactToCreate = new Contact(name,email,phone,location, formattedBirthday);
         ContactService.createContact(contactToCreate)
 
     }
@@ -223,12 +226,12 @@ class DomManager {
         static updateBirthday = (element, id, updateValue) =>
         {
             let toChange = $(`#${element}`);
+            let date = new Date(`#${updateValue}`);
+            let formattedBirthday = date.toLocaleDateString('en-us', {year:"numeric", month:"long", day: "numeric"});
             toChange.replaceWith
             (`<div class ="mb-3" id="birthday-container-${id}">
             <i class=" card-icon fa fa-birthday-cake fa-lg"></i>
-            <p class ="card-text" id = "birthday-text-${id}">${updateValue}</p>`);
-
-
+            <p class ="card-text" id = "birthday-text-${id}">${formattedBirthday}</p>`);
         }
 
 
@@ -255,7 +258,7 @@ class DomManager {
             (`
                 <div class = "form-floating mb-3" id ="name-${id}">
                 <i class=" icon fa fa-check fa-lg" id = "name-confirm" onclick = "DomManager.updateName('name-${id}', ${id}, $('#nameInput').val())"></i>
-                <input type = "text" class = "form-control form-control-sm mb-1" id = "nameInput" placeholder = "Please ender updated name">
+                <input type = "text" class = "form-control form-control-sm mb-1" id = "nameInput" placeholder = "Please enter updated name">
                 <label for = "changeName">New Name</label>
                 </div>
             `
