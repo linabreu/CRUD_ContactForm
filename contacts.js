@@ -7,6 +7,78 @@
     *location
 */
 
+
+const isNotBlank = (element) => { //can use this same one for name, location and birthday, just want it to not be blank
+
+    let userInput = $(`#${element}`);
+    if (userInput.val() == ""  || userInput.val() == null ) //name cannot be empies
+    {
+        userInput.addClass("error-input");
+        return false
+    }
+    else
+    {
+        return true
+    }
+
+
+}
+const isValidPhoneNumber = () => 
+{
+    let phoneInput = $('#phone');
+    let filter = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;    
+    if (filter.test(phoneInput.val())) 
+    {
+        return true;
+    }
+    else 
+    {
+        phoneInput.addClass("error-input");
+        return false;
+    }
+}
+
+const isValidEmail = () => {
+    let emailInput = $('#email');
+    var pattern = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+    if(!pattern.test(emailInput.val()))
+    {
+        emailInput.addClass("error-input")
+        return false;
+    }
+    else
+    {
+        
+        return true;
+    }
+}
+
+const validateInput = () => 
+{
+
+    let elementUpdateList = ["name", "email", "phone", "location", "birthday"]
+    isNotBlank('name');
+    isNotBlank('location')
+    isNotBlank('birthday')
+    isValidEmail();
+    isValidPhoneNumber();
+    if( isNotBlank('name') == false || isNotBlank('location') == false || isNotBlank('birthday') == false ||  isValidPhoneNumber() == false || isValidEmail() == false)
+    {
+       console.log('invalid inputs')
+    }
+    else //if everything is valid - create the contact
+    {
+        DomManager.createContact()
+        for(let i = 0; i < elementUpdateList.length; i++) //once we create the contact- remove all of the error styling
+        {
+            
+            let currentElement = $(`#${elementUpdateList[i]}`);
+            currentElement.toggleClass('error-input', false)
+        }
+        
+    }
+}
+
 const apiEndPoint = "https://64d99efce947d30a260a2ccb.mockapi.io/unit2/contact";
 
 class Contact //contact object
