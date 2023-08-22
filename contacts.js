@@ -7,6 +7,7 @@
     *location
 */
 
+//form validation functions
 const isNotBlank = (element) => { //can use this same one for name, location and birthday, just want it to not be blank
 
     let userInput = $(`#${element}`);
@@ -25,7 +26,7 @@ const isNotBlank = (element) => { //can use this same one for name, location and
 const isValidPhoneNumber = () => 
 {
     let phoneInput = $('#phone');
-    let filter = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;    
+    let filter = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;    //check input against regEx for Phone
     if (filter.test(phoneInput.val())) 
     {
         return true;
@@ -39,7 +40,7 @@ const isValidPhoneNumber = () =>
 
 const isValidEmail = () => {
     let emailInput = $('#email');
-    var pattern = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+    var pattern = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/; //check against regEx for email
     if(!pattern.test(emailInput.val()))
     {
         emailInput.addClass("error-input")
@@ -52,7 +53,7 @@ const isValidEmail = () => {
     }
 }
 
-const validateInput = () => 
+const validateInput = () => //on submit button runs all the validation functions, if everything is good THEN we create the new contact
 {
 
     let elementUpdateList = ["name", "email", "phone", "location", "birthday"]
@@ -68,7 +69,7 @@ const validateInput = () =>
     else //if everything is valid - create the contact
     {
         DomManager.createContact()
-        for(let i = 0; i < elementUpdateList.length; i++) //once we create the contact- remove all of the error styling
+        for(let i = 0; i < elementUpdateList.length; i++) //once we create the contact- remove all of the error styling that got applied if the user tried to make a bad entry
         {
             
             let currentElement = $(`#${elementUpdateList[i]}`);
@@ -92,6 +93,7 @@ class Contact //contact object
     }
 }
 
+//all methods related to hitting the API endpoint
 class ContactService 
 {
     static url = "https://64d99efce947d30a260a2ccb.mockapi.io/unit2/contact";
@@ -127,6 +129,7 @@ class ContactService
         }
        });
 
+       //print a message on the contact card to let the user know that something happened
        let actionMessage = $(`#action-message-${id}`);
        actionMessage.toggleClass("change-text", false);
        actionMessage.toggleClass("confirm-text", true);
@@ -164,6 +167,7 @@ class DomManager {
         .then((contacts) => this.render(contacts));
     }
 
+    //take inputs from the form and turn into an object
     static createContact()
     {
         let name = $('#name').val();
@@ -171,6 +175,7 @@ class DomManager {
         let phone = $('#phone').val();
         let location = $('#location').val();
 
+        //formatting for birthday- when you use date input it gets printed as yyyy-mm-ddd and written out looks nicer
         let birthday = $('#birthday').val()
         let birthdayDate = new Date(birthday);
         let formattedBirthday = birthdayDate.toLocaleDateString('en-us', {year:"numeric", month:"long", day: "numeric"});
@@ -252,6 +257,8 @@ class DomManager {
         updateButton.replaceWith
         (`<button type="button" class="btn btn-success contact-button" id ="submit-update-button" onclick = "ContactService.updateContact(${id})">Submit</button>`)
         
+        //set up so when you click on each field on the contact card, it will change it from text to an input field where you
+        //can input the new value you want to send through the API
         name.on( "click", ()=> 
         {
             name.replaceWith
@@ -324,6 +331,7 @@ class DomManager {
         $('#app').empty();
         for (let contact of contacts)
         {
+            //render all the contacts into the app div, give them all a class of col-sm-3 so on a desktop they will sit four next to each other and look nicer
             $('#app').prepend(
             `<div class = "col-sm-3">
                 <div class="card text-center mt-5">
