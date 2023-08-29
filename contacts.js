@@ -6,6 +6,8 @@
     *birthday
     *location
 */
+let elementUpdateList = ["name", "email", "phone", "location", "birthday"]
+
 
 //form validation functions
 const isNotBlank = (element) => { //can use this same one for name, location and birthday, just want it to not be blank
@@ -56,7 +58,7 @@ const isValidEmail = () => {
 const validateInput = () => //on submit button runs all the validation functions, if everything is good THEN we create the new contact
 {
 
-    let elementUpdateList = ["name", "email", "phone", "location", "birthday"]
+    
     isNotBlank('name');
     isNotBlank('location')
     isNotBlank('birthday')
@@ -136,6 +138,7 @@ class ContactService
        actionMessage.text('Contact has been edited!');
 
        DomManager.getAllContacts();//once its updated reload everything
+       //ContactService.getContact(id)
     }
 
     static deleteContact(id)
@@ -174,6 +177,7 @@ class DomManager {
         let email = $('#email').val();
         let phone = $('#phone').val();
         let location = $('#location').val();
+        let message = $('#update-message');
 
         //formatting for birthday- when you use date input it gets printed as yyyy-mm-ddd and written out looks nicer
         let birthday = $('#birthday').val()
@@ -181,7 +185,9 @@ class DomManager {
         let formattedBirthday = birthdayDate.toLocaleDateString('en-us', {year:"numeric", month:"long", day: "numeric"});
         
         let contactToCreate = new Contact(name,email,phone,location, formattedBirthday);
-        ContactService.createContact(contactToCreate)
+        ContactService.createContact(contactToCreate);
+        window.alert("New contact created!"); //let them know that it worked
+        document.getElementById("contact-form").reset();
 
     }
     // helper functions for changing the fields in the contact cards when editing
